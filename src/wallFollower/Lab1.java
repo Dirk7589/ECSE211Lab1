@@ -26,10 +26,12 @@ public class Lab1 {
 // Ultrasonic sensor connected to input port S1
 // Left motor connected to output A
 // Right motor connected to output B
-	
-	private static final Port usPort = LocalEV3.get().getPort("S1");
-	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
-	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+	private static String ultraSonicSensorPortName = "S1";
+	private static String leftMotorPort = "A";
+	private static String rightMotorPort = "D";
+	private static final Port ultraSonicSensorPort = LocalEV3.get().getPort(ultraSonicSensorPortName);
+	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(leftMotorPort));
+	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(rightMotorPort));
 	
 // Main entry point - instantiate objects used and set up sensor
 	
@@ -55,7 +57,7 @@ public class Lab1 {
 		// 4. Create a buffer for the sensor data
 		
 		@SuppressWarnings("resource")							    // Because we don't bother to close this resource
-		SensorModes usSensor = new EV3UltrasonicSensor(usPort);		// usSensor is the instance
+		SensorModes usSensor = new EV3UltrasonicSensor(ultraSonicSensorPort);		// usSensor is the instance
 		SampleProvider usDistance = usSensor.getMode("Distance");	// usDistance provides samples from this instance
 		float[] usData = new float[usDistance.sampleSize()];		// usData is the buffer in which data are returned
 		
