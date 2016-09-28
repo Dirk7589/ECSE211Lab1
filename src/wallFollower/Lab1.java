@@ -29,6 +29,7 @@ public class Lab1 {
 	private static String ultraSonicSensorPortName = "S1";
 	private static String leftMotorPort = "A";
 	private static String rightMotorPort = "D";
+	
 	private static final Port ultraSonicSensorPort = LocalEV3.get().getPort(ultraSonicSensorPortName);
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(leftMotorPort));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(rightMotorPort));
@@ -37,17 +38,12 @@ public class Lab1 {
 	
 	public static void main(String [] args) {
 		
-		int option = 0;
+		int pushedButton = 0;
 		Printer.printMainMenu();						// Set up the display on the EV3 screen
-		while (option == 0)								// and wait for a button press.  The button
-			option = Button.waitForAnyPress();			// ID (option) determines what type of control to use
-		
-		// Setup controller objects
-		
-		BangBangController bangbang = new BangBangController(leftMotor, rightMotor,
-															 bandCenter, bandWidth, motorLow, motorHigh);
-		PController p = new PController(leftMotor, rightMotor, bandCenter, bandWidth);
-		
+		while (pushedButton == 0){								// and wait for a button press.  The button
+			pushedButton = Button.waitForAnyPress();			// ID (option) determines what type of control to use
+		}
+	
 		// Setup ultrasonic sensor
 		// Note that the EV3 version of leJOS handles sensors a bit differently.
 		// There are 4 steps involved:
@@ -57,27 +53,31 @@ public class Lab1 {
 		// 4. Create a buffer for the sensor data
 		
 		@SuppressWarnings("resource")							    // Because we don't bother to close this resource
-		SensorModes usSensor = new EV3UltrasonicSensor(ultraSonicSensorPort);		// usSensor is the instance
-		SampleProvider usDistance = usSensor.getMode("Distance");	// usDistance provides samples from this instance
-		float[] usData = new float[usDistance.sampleSize()];		// usData is the buffer in which data are returned
+		SensorModes ultraSonicSensor = new EV3UltrasonicSensor(ultraSonicSensorPort);		// usSensor is the instance
+		SampleProvider ultraSonicDistance = ultraSonicSensor.getMode("Distance");	// usDistance provides samples from this instance
+		float[] ultraSonicData = new float[ultraSonicDistance.sampleSize()];		// usData is the buffer in which data are returned
 		
 		// Setup Printer											// This thread prints status information
 		Printer printer = null;										// in the background
 		
 		// Setup Ultrasonic Poller									// This thread samples the US and invokes
-		UltrasonicPoller usPoller = null;							// the selected controller on each cycle
+		UltrasonicPoller ultraSonicPoller = null;							// the selected controller on each cycle
 				
 		// Depending on which button was pressed, invoke the US poller and printer with the
 		// appropriate constructor.
 		
-		switch(option) {
-		case Button.ID_LEFT:										// Bang-bang control selected
-			usPoller = new UltrasonicPoller(usDistance, usData, bangbang);
-			printer = new Printer(option, bangbang);
+		switch(pushedButton) {
+		case Button.ID_LEFT:
+			// Bang-bang control selected
+			BangBangController bangbang = new BangBangController(leftMotor, rightMotor,
+					 bandCenter, bandWidth, motorLow, motorHigh);
+			ultraSonicPoller = new UltrasonicPoller(ultraSonicDistance, ultraSonicData, bangbang);
+			printer = new Printer(pushedButton, bangbang);
 			break;
 		case Button.ID_RIGHT:										// Proportional control selected
-			usPoller = new UltrasonicPoller(usDistance, usData, p);
-			printer = new Printer(option, p);
+			PController p = new PController(leftMotor, rightMotor, bandCenter, bandWidth);
+			ultraSonicPoller = new UltrasonicPoller(ultraSonicDistance, ultraSonicData, p);
+			printer = new Printer(pushedButton, p);
 			break;
 		default:
 			System.out.println("Error - invalid button");			// None of the above - abort
@@ -87,7 +87,7 @@ public class Lab1 {
 		
 		// Start the poller and printer threads
 		
-		usPoller.start();
+		ultraSonicPoller.start();
 		printer.start();
 		
 		//Wait here forever until button pressed to terminate wallfollower
