@@ -13,26 +13,10 @@ import lejos.hardware.Button;
 // This is the main class for the wall follower.
 
 public class Lab1 {
-
-// Parameters: adjust these for desired performance
-
-	private static final int bandCenter = 20;			// Offset from the wall (cm)
-	private static final int bandWidth = 3;				// Width of dead band (cm)
-	private static final int motorLow = 100;			// Speed of slower rotating wheel (deg/sec)
-	private static final int motorHigh = 200;			// Speed of the faster rotating wheel (deg/seec)
 	
-// Static Resources:
-//
-// Ultrasonic sensor connected to input port S1
-// Left motor connected to output A
-// Right motor connected to output B
-	private static String ultraSonicSensorPortName = "S1";
-	private static String leftMotorPort = "A";
-	private static String rightMotorPort = "D";
-	
-	private static final Port ultraSonicSensorPort = LocalEV3.get().getPort(ultraSonicSensorPortName);
-	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(leftMotorPort));
-	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(rightMotorPort));
+	private static final Port ultraSonicSensorPort = LocalEV3.get().getPort(RobotConstants.ULTRASONICSENSOR_PORT_NAME);
+	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(RobotConstants.LEFT_MOTOR_PORT));
+	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(RobotConstants.RIGHT_MOTOR_PORT));
 	
 // Main entry point - instantiate objects used and set up sensor
 	
@@ -70,12 +54,12 @@ public class Lab1 {
 		case Button.ID_LEFT:
 			// Bang-bang control selected
 			BangBangController bangbang = new BangBangController(leftMotor, rightMotor,
-					 bandCenter, bandWidth, motorLow, motorHigh);
+					 RobotConstants.BAND_CENTER, RobotConstants.BAND_WIDTH, RobotConstants.MOTOR_LOW, RobotConstants.MOTOR_HIGH);
 			ultraSonicPoller = new UltrasonicPoller(ultraSonicDistance, ultraSonicData, bangbang);
 			printer = new Printer(pushedButton, bangbang);
 			break;
 		case Button.ID_RIGHT:										// Proportional control selected
-			PController p = new PController(leftMotor, rightMotor, bandCenter, bandWidth);
+			PController p = new PController(leftMotor, rightMotor, RobotConstants.BAND_CENTER, RobotConstants.BAND_WIDTH);
 			ultraSonicPoller = new UltrasonicPoller(ultraSonicDistance, ultraSonicData, p);
 			printer = new Printer(pushedButton, p);
 			break;
