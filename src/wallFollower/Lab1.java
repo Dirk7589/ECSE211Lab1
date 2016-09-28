@@ -80,8 +80,8 @@ public class Lab1 {
 			printer = new Printer(pushedButton, p);
 			break;
 		default:
-			System.out.println("Error - invalid button");			// None of the above - abort
-			System.exit(-1);
+			Printer.printErrorMessage();
+			System.exit(-1); //Signal error
 			break;
 		}
 		
