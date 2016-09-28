@@ -44,4 +44,8 @@ public class Printer extends Thread {
 		t.drawString("left = bangbang",  0, 0);
 		t.drawString("right = p type", 0, 1);
 	}
+	public static void printErrorMessage(){
+		t.clear();
+		t.drawString("Unknown option", 0, 0);
+	}
 }
