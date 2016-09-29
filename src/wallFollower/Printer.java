@@ -44,8 +44,12 @@ public class Printer extends Thread {
 		t.drawString("left = bangbang",  0, 0);
 		t.drawString("right = p type", 0, 1);
 	}
-	public static void printErrorMessage(){
+	public static void printButtonErrorMessage(){
 		t.clear();
 		t.drawString("Unknown option", 0, 0);
+	}
+	public static void printGeneralErrorMessage(Exception e){
+		t.clear();
+		t.drawString("Exception caught "+e.getMessage(), 0, 0);
 	}
 }

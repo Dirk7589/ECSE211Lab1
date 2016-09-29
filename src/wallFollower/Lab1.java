@@ -80,7 +80,7 @@ public class Lab1 {
 			printer = new Printer(pushedButton, p);
 			break;
 		default:
-			Printer.printErrorMessage();
+			Printer.printButtonErrorMessage();
 			System.exit(-1); //Signal error
 			break;
 		}
