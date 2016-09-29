@@ -24,7 +24,7 @@ public class PController implements UltrasonicController {
 	}
 	
 	@Override
-	public void processUSData(int distance) {
+	public void processUltraSonicData(int distance) {
 		
 		// rudimentary filter - toss out invalid samples corresponding to null signal.
 		// (n.b. this was not included in the Bang-bang controller, but easily could have).
@@ -46,7 +46,7 @@ public class PController implements UltrasonicController {
 
 	
 	@Override
-	public int readUSDistance() {
+	public int readUltraSonicDistance() {
 		return this.distance;
 	}
 

@@ -35,13 +35,13 @@ public class BangBangController implements UltrasonicController{
 	}
 	
 	@Override
-	public void processUSData(int distance) {
+	public void processUltraSonicData(int distance) {
 		this.distance = distance;
 		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
 	}
 
 	@Override
-	public int readUSDistance() {
+	public int readUltraSonicDistance() {
 		return this.distance;
 	}
 }
